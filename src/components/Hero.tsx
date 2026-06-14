@@ -22,7 +22,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-24 md:py-28">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.15),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,hsl(var(--secondary)/0.1),transparent_50%)]" />
@@ -42,7 +42,7 @@ const Hero = () => {
         className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"
       />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -99,14 +99,14 @@ const Hero = () => {
           >
             <a
               href="#projects"
-              className="group px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-105 flex items-center gap-2"
+              className="group w-full sm:w-auto px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-105 flex items-center justify-center gap-2"
             >
               Explore My Work
               <ArrowDown size={18} className="group-hover:translate-y-1 transition-transform" />
             </a>
             <a
               href="#skills"
-              className="px-8 py-4 rounded-full border border-border bg-muted/30 text-foreground font-semibold transition-all duration-300 hover:bg-muted/50 hover:border-primary/50"
+              className="w-full sm:w-auto px-8 py-4 rounded-full border border-border bg-muted/30 text-foreground font-semibold text-center transition-all duration-300 hover:bg-muted/50 hover:border-primary/50"
             >
               View Skills
             </a>
@@ -142,7 +142,7 @@ const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="hidden sm:block absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}

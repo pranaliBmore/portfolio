@@ -4,11 +4,15 @@ import { personalInfo } from '@/data/portfolio';
 import { Send, Mail, Phone, MapPin, Github, Linkedin, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+// FormSubmit delivers each submission to this inbox — no signup needed.
+// The first message triggers a one-time confirmation email; click its link to activate.
+const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/morepranali0007@gmail.com";
+
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { toast } = useToast();
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,21 +26,50 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch(FORMSUBMIT_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          _subject: `Portfolio contact: ${formData.subject}`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: "Message Sent!",
-      description: "Thanks for reaching out. I'll get back to you soon!",
-    });
+      const result = await response.json();
 
-    // Reset form after animation
-    setTimeout(() => {
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setIsSubmitted(false);
-    }, 3000);
+      if (!response.ok || String(result.success) !== "true") {
+        throw new Error(result.message || "Submission failed");
+      }
+
+      setIsSubmitted(true);
+      toast({
+        title: "Message Sent!",
+        description: "Thanks for reaching out. I'll get back to you soon!",
+      });
+
+      // Reset form after animation
+      setTimeout(() => {
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setIsSubmitted(false);
+      }, 3000);
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: "Your message couldn't be sent. Please try again, or email me directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -55,18 +88,18 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
+    <section id="contact" className="py-16 md:py-24 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(var(--primary)/0.08),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--secondary)/0.05),transparent_50%)]" />
 
-      <div className="container mx-auto px-6 relative z-10" ref={ref}>
+      <div className="container mx-auto px-4 sm:px-6 relative z-10" ref={ref}>
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
           <span className="text-primary font-medium tracking-wide text-sm uppercase">Get In Touch</span>
           <h2 className="font-display text-4xl md:text-5xl font-bold mt-4 mb-6">
@@ -77,7 +110,7 @@ const Contact = () => {
           </p>
         </motion.div>
 
-        <div className="max-w-5xl mx-auto grid lg:grid-cols-5 gap-12">
+        <div className="max-w-5xl mx-auto grid lg:grid-cols-5 gap-10 lg:gap-12">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -88,15 +121,15 @@ const Contact = () => {
             <div className="space-y-6">
               {contactDetails.map((detail) => (
                 <div key={detail.label} className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                  <div className="p-3 rounded-xl bg-primary/10 text-primary shrink-0">
                     <detail.icon size={20} />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm text-muted-foreground">{detail.label}</p>
                     {detail.href ? (
                       <a
                         href={detail.href}
-                        className="text-foreground font-medium hover:text-primary transition-colors"
+                        className="text-foreground font-medium hover:text-primary transition-colors break-all"
                       >
                         {detail.value}
                       </a>
